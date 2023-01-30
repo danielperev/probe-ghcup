@@ -1,0 +1,36 @@
+name: Haskell CI
+
+on:
+  push:
+    branches:
+    - "**"
+    tags-ignore:
+    - "**"
+  pull_request:
+    branches:
+    - "**"
+    tags-ignore:
+    - "**"
+    types:
+    - 'opened'
+    - 'reopened'
+    - 'synchronize'
+
+permissions:
+  contents: read
+
+jobs:
+  haskell_matrix:
+    strategy:
+      matrix:
+        os: [macos-10.15, windows-2019, ubuntu-18.04]
+  build:
+    runs-on: ${{matrix.os}}
+    steps:
+    - name: shim
+      shell: bash
+      run: |
+        ghcup --version
+        ghcup config set downloader Curl
+        ghcup upgrade
+        ghcup --version
